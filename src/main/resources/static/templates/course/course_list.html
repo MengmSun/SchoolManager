@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>高校信息管理系统</title>
+    <!-- 在网页标题左侧显示图标 -->
+    <link rel="icon" href="/images/schoolmanager.ico" type="image/x-icon">
+    <!-- 在收藏夹显示图标 -->
+    <link rel="shortcut icon" href="/images/schoolmanager.ico" type="image/x-icon">
+    <!-- 在阅读列表显示图标 -->
+    <link rel="Bookmark" href="/images/schoolmanager.ico" type="image/x-icon">
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <script src="../../layui/layui.js"></script>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+            <div class="layui-logo">高校信息管理系统</div>
+        </div>
+
+        <div class="layui-side layui-bg-black">
+            <div class="layui-side-scroll">
+                <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+                <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                    <li class="layui-nav-item layui-nav-itemed">
+                        <a class="" href="javascript:;">基本信息管理</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="../campus/list">校区管理</a></dd>
+                            <dd><a href="../profession/list">专业管理</a></dd>
+                            <dd><a href="../clazz/list">班级管理</a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:;">人员管理</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="../student/list">学生信息管理</a></dd>
+                            <dd><a href="../teacher/list">教师信息管理</a></dd>
+                            <!--dd><a href="../switch_major/list">学籍异动管理</a></dd-->
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a class="javascript:;">学籍异动管理</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="../switch_major/list">学生转专业管理</a></dd>
+                            <dd><a href="../down_grade/list">学生降级管理</a> </dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:;">教务管理</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="../course/list">课程信息管理</a></dd>
+                            <dd><a href="../course_start/list">教师开课管理</a></dd>
+                            <dd><a href="../score/list">学生选课管理</a></dd>
+                        </dl>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="layui-body">
+            <!-- 内容主体区域 -->
+
+
+            <!-- 标签1内容 -->
+            <table class="layui-hide" id="table_instance" lay-filter="table_instance"></table>
+            <!-- 头部工具栏 -->
+            <script type="text/html" id="toolbar_instance">
+                <div class="layui-container">
+                    <div class="layui-inline">
+                        <input class="layui-input" placeholder="输入id" name="id" id="searchId" autocomplete="on">
+                    </div>
+                    <div class="layui-inline">
+                        <input class="layui-input" placeholder="输入name" name="name" id="searchName" autocomplete="on">
+                    </div>
+                    <button id="search" class="layui-btn" data-type="reload" lay-event="search" lay-submit>查询</button>
+                    <button class="layui-btn" lay-event="getCheckData">获取选中行数据</button>
+                    <button class="layui-btn" lay-event="getCheckLength">获取选中数目</button>
+                    <button class="layui-btn" lay-event="isAll">验证是否全选</button>
+                    <button class="layui-btn" lay-event="add">添加</button>
+                    <button class="layui-btn layui-btn-danger" lay-event="delete">删除</button>
+                </div>
+            </script>
+            <!-- 行工具 -->
+            <script type="text/html" id="row_tool_instace">
+                <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+            </script>
+        </div>
+
+
+        <div class="layui-footer">
+            <!-- 底部固定区域 -->
+            高校信息管理系统-信息管理
+            <a href="http://www.beian.miit.gov.cn" >皖ICP备18019563号</a>
+        </div>
+
+    </div>
+
+</body>
+<script>
+    layui.use('element', function () {
+        var element = layui.element;
+    });
+
+    layui.use('table', function () {
+        var table = layui.table;
+        table.render({
+            elem: '#table_instance',
+            method: 'post',
+            // 修改url为/xxx/get_list
+            url: '/course/get_list',
+            page: true,
+            parseData: function (res) {
+                return {
+                    'code': status,
+                    'count': res.total,
+                    'data': res.rows
+                };
+            },
+            toolbar: '#toolbar_instance', // 开启头部工具栏，并为其绑定左侧模板
+            defaultToolbar: ['filter', 'exports', 'print'],
+            // 修改title为'xxx数据表'
+            title: '数据表',
+            done: function (res) {
+                console.log(res);
+            },
+            // 修改相应的的col(首尾两条固定)
+            cols: [
+                [{
+                    type: 'checkbox', // 选择框
+                    fixed: 'left'
+                }, {
+                    field: 'courseId', // 字段名,数据库中的属性名
+                    title: 'ID', // 标题,页面显示的属性名
+                    width: 80, // 列宽,不填写则自动分配
+                    fixed: 'left', // 固定列
+                    //unresize: true, // 禁用拖拽列宽
+                    sort: true, // 允许排序
+                }, {
+                    field: 'courseName',
+                    title: 'NAME',
+                    width: 120,
+                    // edit: 'text', // 允许单元格编辑
+                    sort: true, // 允许排序
+                }, {
+                    field: 'courseAssessType',
+                    title: '考核方式',
+                    width: 150,
+                    // edit: 'text',
+                }, {
+                    field: 'professionId',
+                    title: '专业id',
+                    width: 150,
+                    // edit: 'text',
+                    sort: true, // 允许排序
+                }, {
+                    fixed: 'right',
+                    width: 150,
+                    align: 'center',
+                    toolbar: '#row_tool_instace' // 行工具
+                }]
+            ],
+            id: 'course'
+        });
+
+        //头工具栏事件
+        table.on('toolbar(table_instance)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'getCheckData':
+                    var data = checkStatus.data;
+                    layer.alert(JSON.stringify(data));
+                    break;
+                case 'getCheckLength':
+                    var data = checkStatus.data;
+                    layer.msg('选中了：' + data.length + ' 个');
+                    break;
+                case 'isAll':
+                    layer.msg(checkStatus.isAll ? '全选' : '未全选');
+                    break;
+                case 'add':
+                    layer.open({
+                        type: 2,
+                        maxmin: true,
+                        area: ['500px', '600px'],
+                        content: "../../forms/course_form.html?op=add",
+                        cancel: function (index, layero) {
+                            layui.table.reload('course', {});
+                        },
+                    });
+                    break;
+
+                case 'delete':
+                    // 与后台交互后reload表格
+                    var data = checkStatus.data;
+                    var ids = new Array(data.length);
+                    for (let i = 0; i < data.length; i++) {
+                        ids[i] = data[i].courseId;
+                    }
+                    layer.confirm('确定批量删除么', function (index) {
+                        $.ajax({ //ajax请求
+                            type: "post",
+                            url: "/course/delete", //路径：对应Controller方法的路径
+                            data: {
+                                ids: ids
+                            },
+                            success: function (
+                                result
+                            ) { //result为返回的Json对象,对应后台方法的Map<String,String> ret
+                                table.reload('course', {});
+                                if (result.type == "success") {
+                                    layer.msg(result.msg);
+                                } else {
+                                    layer.msg(result.msg);
+                                    return;
+                                }
+                            }
+                        });
+                        layer.close(index);
+                    });
+                    // checkStatus.del(); // 删除对应行（tr）的DOM结构，并更新缓存
+                    break;
+                case 'search':
+                    // 与后台交互后reload表格
+                    var searchId = $('#searchId');
+                    var searchName = $('#searchName');
+                    //执行重载
+                    table.reload('course', {
+                        where: {
+                            courseId: searchId.val(),
+                            courseName: searchName.val()
+                        },
+                        page: {
+                            curr: 1 //重新从第 1 页开始
+                        }
+                    });
+                    break;
+            };
+        });
+
+        //监听行工具事件
+        table.on('tool(table_instance)', function (obj) {
+            var data = obj.data;
+            //console.log(obj)
+
+            if (obj.event === 'del') {
+                layer.confirm('确定删除行么', function (index) {
+                    // alert(data.id);
+                    $.ajax({ //ajax请求
+                        type: "post",
+                        url: "/course/delete", //路径：对应Controller方法的路径
+                        data: {
+                            ids: [data.courseId]
+                        },
+                        success: function (
+                            result
+                        ) { //result为返回的Json对象,对应后台方法的Map<String,String> ret
+                            if (result.type == "success") {
+                                layer.msg(result.msg);
+                                obj.del(); // 删除对应行（tr）的DOM结构，并更新缓存
+                            } else {
+                                layer.msg(result.msg);
+                                return;
+                            }
+                        }
+                    });
+                    layer.close(index);
+                });
+            } else if (obj.event === 'edit') {
+                layer.open({
+                    type: 2,
+                    maxmin: true,
+                    area: ['500px', '600px'],
+                    content: "../../forms/course_form.html?op=edit" + "&id=" + data.courseId,
+                    cancel: function (index, layero) {
+                        layui.table.reload('course', {});
+                    },
+                });
+            }
+        });
+
+    }); // end of layui.use('table',...)
+</script>
+</body>
+
+</html>

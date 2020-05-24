@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ssm.campus.mapper.CampusMapper">
+    <resultMap id="CampusMap" type="Campus">
+        <id property="id" column="campus_id"/>
+        <result property="name" column="campus_name"/>
+        <result property="address" column="campus_address"/>
+    </resultMap>
+
+    <select id="findList" parameterType="Map" resultMap="CampusMap">
+        select * from t_campus where 1=1
+        <if test="name!=null">
+            and campus_name like #{name}
+        </if>
+        <if test="id!=null">
+            and campus_id like #{id}
+        </if>
+        order by campus_id
+        limit #{offset},#{pageSize}
+    </select>
+    <select id="findAll" resultMap="CampusMap">
+        select * from t_campus
+    </select>
+    <select id="getTotal" parameterType="Map" resultType="Integer">
+        select count(campus_id) from t_campus where 1=1
+        <if test="name!=null">
+            and campus_name like #{name}
+        </if>
+        <if test="id!=null">
+            and campus_id like #{id}
+        </if>
+    </select>
+    <update id="add" parameterType="Campus">
+        insert into t_campus(campus_id,campus_name,campus_address)
+        values(#{id},#{name},#{address})
+    </update>
+    <update id="edit" parameterType="Campus">
+        update t_campus set campus_name=#{name},campus_address=#{address}
+        where campus_id=#{id}
+    </update>
+    <update id="delete" parameterType="String">
+
+        delete from t_campus where campus_id in (${_value});
+
+    </update>
+</mapper>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ssm.teacher.mapper.TeacherMapper">
+    <resultMap id="TeacherMap" type="Teacher">
+        <id property="teacherId" column="teacher_id"/>
+        <result property="teacherPersonId" column="teacher_person_id"/>
+        <result property="teacherPersonIdType" column="teacher_person_id_type"/>
+        <result property="teacherName" column="teacher_name"/>
+        <result property="teacherSex" column="teacher_sex"/>
+        <result property="teacherTitle" column="teacher_title"/>
+        <result property="teacherBirthday" column="teacher_birthday"/>
+        <result property="teacherCountry" column="teacher_country"/>
+        <result property="teacherPhoneNumber" column="teacher_phone_number"/>
+        <result property="teacherAddress" column="teacher_address"/>
+        <result property="teacherPC" column="teacher_PC"/>
+        <result property="teacherStartYear" column="teacher_start_year"/>
+        <result property="teacherEmail" column="teacher_email"/>
+        <result property="professionId" column="teacher_profession_id"/>
+    </resultMap>
+    <update id="add" parameterType="Teacher">
+        insert into t_teacher (teacher_id,teacher_person_id,teacher_person_id_type,
+                               teacher_name,teacher_sex,teacher_title,teacher_birthday,
+                               teacher_country,teacher_phone_number,teacher_address,teacher_PC,
+                               teacher_start_year,teacher_email,teacher_profession_id)
+        values (#{teacherId},#{teacherPersonId},#{teacherPersonIdType},#{teacherName},
+                #{teacherSex},#{teacherTitle},#{teacherBirthday},#{teacherCountry},#{teacherPhoneNumber},
+                #{teacherAddress},#{teacherPC},#{teacherStartYear},#{teacherEmail},#{professionId})
+    </update>
+    <update id="edit" parameterType="Teacher">
+        update t_teacher set teacher_person_id=#{teacherPersonId},
+                             teacher_person_id_type=#{teacherPersonIdType},
+                             teacher_name=#{teacherName},
+                             teacher_sex=#{teacherSex},
+                             teacher_title=#{teacherTitle},
+                             teacher_birthday=#{teacherBirthday},
+                             teacher_country=#{teacherCountry},
+                             teacher_phone_number=#{teacherPhoneNumber},
+                             teacher_address=#{teacherAddress},
+                             teacher_PC=#{teacherPC},
+                             teacher_start_year=#{teacherStartYear},
+                             teacher_email=#{teacherEmail},
+                             teacher_profession_id=#{professionId}
+        where teacher_id=#{teacherId}
+    </update>
+    <update id="delete" parameterType="String">
+        delete from t_teacher where teacher_id in (${_value})
+    </update>
+    <select id="getTotal" parameterType="Map" resultType="Integer">
+        select count(teacher_id) from t_teacher where 1=1
+        <if test="teacherId!=null">
+            and teacher_id like #{teacherId}
+        </if>
+        <if test="teacherName!=null">
+            and teacher_name like #{teacherName}
+        </if>
+
+    </select>
+    <select id="findAll" resultMap="TeacherMap">
+        select * from t_teacher where 1=1
+    </select>
+    <select id="findList" parameterType="Map" resultMap="TeacherMap">
+        select * from t_teacher where 1=1
+        <if test="teacherId!=null">
+            and teacher_id like #{teacherId}
+        </if>
+        <if test="teacherName!=null">
+            and teacher_name like #{teacherName}
+        </if>
+        order by teacher_id
+        limit #{offset},#{pageSize}
+    </select>
+
+    <select id="ifExist" parameterType="String" resultType="Integer">
+        select count(teacher_id) from t_teacher where
+            teacher_id = #{teacherId}
+    </select>
+    <select id="ifProfessionExist" parameterType="String" resultType="Integer">
+        select count(teacher_id) from t_teacher where
+            teacher_profession_id = #{professionId}
+    </select>
+</mapper>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ssm.switchmajor.mapper.SwitchMajorMapper">
+    <resultMap id="SwitchMajorMap" type="SwitchMajor">
+        <id property="id" column="switch_id"/>
+        <result property="date" column="date"/>
+        <result property="member" column="member"/>
+        <result property="lastClazzId" column="last_clazz_id"/>
+        <result property="nowClazzId" column="now_clazz_id"/>
+        <association property="student" javaType="ssm.student.entity.Student">
+            <id property="studentId" column="student_id"/>
+            <result property="studentPersonId" column="student_person_id"/>
+            <result property="studentPersonIdType" column="student_person_id_type"/>
+            <result property="studentName" column="student_name"/>
+            <result property="studentSex" column="student_sex"/>
+            <result property="studentBirthday" column="student_birthday"/>
+            <result property="studentCountry" column="student_country"/>
+            <result property="studentPhoneNumber" column="student_phone_number"/>
+            <result property="studentAddress" column="student_address"/>
+            <result property="studentPC" column="student_PC"/>
+            <result property="studentStartYear" column="student_start_year"/>
+            <result property="studentEmail" column="student_email"/>
+            <result property="studentClazzId" column="student_clazz_id"/>
+        </association>
+    </resultMap>
+    <update id="add" parameterType="SwitchMajor">
+        update t_student set t_student.student_clazz_id=#{nowClazzId} where t_student.student_id = #{student.studentId};
+        insert into t_switch (switch_id, date, member, last_clazz_id, now_clazz_id, student_id)
+        values (#{id},#{date},#{member},#{lastClazzId},#{nowClazzId},#{student.studentId});
+    </update>
+    <update id="edit" parameterType="SwitchMajor">
+        update t_student set t_student.student_clazz_id=#{nowClazzId} where t_student.student_id = #{student.studentId};
+        update t_switch set date=#{date},
+                               member=#{member},
+                               last_clazz_id=#{lastClazzId},
+                               now_clazz_id=#{nowClazzId}
+        where switch_id = #{id} and student_id= #{student.studentId};
+    </update>
+    <select id="findList" parameterType="Map" resultMap="SwitchMajorMap">
+        select t_switch.switch_id,t_switch.date,t_switch.member,t_switch.last_clazz_id,t_switch.now_clazz_id,t_student.*
+        from t_switch,t_student where 1=1
+        <if test="id!=null">
+            and t_switch.switch_id like #{id}
+        </if>
+        <if test="studentId!=null">
+            and t_student.student_id like #{studentId}
+        </if>
+        and t_student.student_id = t_switch.student_id
+        order by t_switch.switch_id
+        limit #{offset},#{pageSize};
+    </select>
+
+    <update id="delete" parameterType="String">
+        delete from t_switch where switch_id in (${_value})
+    </update>
+
+    <select id="getTotal" parameterType="Map" resultType="Integer">
+        select count(t_switch.switch_id)
+        from t_switch,t_student where 1=1
+        <if test="id!=null">
+            and t_switch.switch_id like #{id}
+        </if>
+        <if test="studentId!=null">
+            and t_student.student_id like #{studentId}
+        </if>
+        and t_student.student_id = t_switch.student_id;
+    </select>
+    <select id="findRecord" parameterType="String" resultMap="SwitchMajorMap">
+        select t_switch.switch_id,t_switch.date,t_switch.member,t_switch.last_clazz_id,t_switch.now_clazz_id,t_student.*
+        from t_switch,t_student where t_switch.student_id=#{studentId} and t_switch.student_id=t_student.student_id;
+    </select>
+</mapper>

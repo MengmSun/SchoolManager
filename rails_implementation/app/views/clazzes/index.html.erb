@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Clazzes</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Code</th>
+      <th>Name</th>
+      <th>Supervisor</th>
+      <th>Grade</th>
+      <th>Department</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @clazzes.each do |clazz| %>
+    <tr>
+      <td><%= clazz.code %></td>
+      <td><%= clazz.name %></td>
+      <td><%= clazz.teacher_id %></td>
+      <td><%= clazz.grade %></td>
+      <td><%= clazz.department_id %></td>
+      <td><%= link_to 'Show', clazz %></td>
+      <td><%= link_to 'Edit', edit_clazz_path(clazz) %></td>
+      <td><%= link_to 'Destroy', clazz, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Clazz', (@department ? new_department_clazz_path(@department) : new_clazz_path) %>

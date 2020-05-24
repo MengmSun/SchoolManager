@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Campus</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <script src="../../layui/layui.js"></script>
+
+</head>
+<body>
+
+
+<table id="campus-table" ></table>
+
+<script type="text/javascript">
+
+
+    layui.use(['table'],function(){
+        var table = layui.table;
+
+        //campus
+        table.render({
+            elem: '#campus-table',
+            height: 312,
+            method: 'post',
+            url: '/campus/get_list',
+            page: true,
+            where: {id: '1'},
+            request: {
+                pageName: 'pageSize',//页码的参数名称
+                limitName: 'offset'//每页数据量的参数名
+            },
+            parseData: function(res){//res即为返回的数据
+                return{
+                    "code": status, //解析接口状态
+                    "count": res.total,
+                    "data": res.rows
+                };
+            },
+            cols: [[
+                {field: 'id',title: 'ID',width: 80,sort: true,fixed: 'left'},
+                {field: 'name',title: 'NAME',width:80},
+                {field: 'address',title: 'ADDRESS',width:180}
+            ]],
+            done: function (res) {
+                console.log(res);
+            }
+
+        });
+    });
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,42 @@
+<%= form_with(model: clazz, local: true) do |form| %>
+<% if clazz.errors.any? %>
+<div id="error_explanation">
+  <h2><%= pluralize(clazz.errors.count, "error") %> prohibited this clazz from being saved:</h2>
+
+  <ul>
+    <% clazz.errors.full_messages.each do |message| %>
+    <li><%= message %></li>
+    <% end %>
+  </ul>
+</div>
+<% end %>
+
+<div class="field">
+  <%= form.label :code %>
+  <%= form.text_field :code %>
+</div>
+
+<div class="field">
+  <%= form.label :name %>
+  <%= form.text_field :name %>
+</div>
+
+<div class="field">
+  <%= form.label :teacher_id %>
+  <%= form.text_field :teacher_id %>
+</div>
+
+<div class="field">
+  <%= form.label :grade %>
+  <%= form.number_field :grade %>
+</div>
+
+<div class="field">
+  <%= form.label :department_id %>
+  <%= form.text_field :department_id %>
+</div>
+
+<div class="actions">
+  <%= form.submit %>
+</div>
+<% end %>

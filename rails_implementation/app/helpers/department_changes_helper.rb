@@ -1,0 +1,2 @@
+module DepartmentChangesHelper
+end

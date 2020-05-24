@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ssm.student.mapper.StudentMapper">
+    <resultMap id="StudentMap" type="Student">
+        <id property="studentId" column="student_id"/>
+        <result property="studentPersonId" column="student_person_id"/>
+        <result property="studentPersonIdType" column="student_person_id_type"/>
+        <result property="studentName" column="student_name"/>
+        <result property="studentSex" column="student_sex"/>
+        <result property="studentBirthday" column="student_birthday"/>
+        <result property="studentCountry" column="student_country"/>
+        <result property="studentPhoneNumber" column="student_phone_number"/>
+        <result property="studentAddress" column="student_address"/>
+        <result property="studentPC" column="student_PC"/>
+        <result property="studentStartYear" column="student_start_year"/>
+        <result property="studentEmail" column="student_email"/>
+        <result property="studentClazzId" column="student_clazz_id"/>
+    </resultMap>
+    <update id="add" parameterType="Student">
+        insert into t_student (student_id,student_person_id,student_person_id_type,student_name,student_sex,student_birthday,student_country,student_phone_number,student_address,student_PC,student_start_year,student_email,student_clazz_id)
+                values (#{studentId},#{studentPersonId},#{studentPersonIdType},#{studentName},
+                        #{studentSex},#{studentBirthday},#{studentCountry},#{studentPhoneNumber},
+                        #{studentAddress},#{studentPC},#{studentStartYear},#{studentEmail},#{studentClazzId})
+    </update>
+    <update id="edit" parameterType="Student">
+        update t_student set student_person_id=#{studentPersonId},
+                             student_person_id_type=#{studentPersonIdType},
+                             student_name=#{studentName},
+                             student_sex=#{studentSex},
+                             student_birthday=#{studentBirthday},
+                             student_country=#{studentCountry},
+                             student_phone_number=#{studentPhoneNumber},
+                             student_address=#{studentAddress},
+                             student_PC=#{studentPC},
+                             student_start_year=#{studentStartYear},
+                             student_email=#{studentEmail},
+                             student_clazz_id=#{studentClazzId}
+        where student_id=#{studentId}
+    </update>
+    <update id="delete" parameterType="String">
+        delete from t_student where student_id in (${_value})
+    </update>
+    <select id="getTotal" parameterType="Map" resultType="Integer">
+        select count(student_id) from t_student where 1=1
+        <if test="studentId!=null">
+            and student_id like #{studentId}
+        </if>
+        <if test="studentName!=null">
+            and student_name like #{studentName}
+        </if>
+
+    </select>
+    <select id="findAll" resultMap="StudentMap">
+        select * from t_student where 1=1
+    </select>
+    <select id="findList" parameterType="Map" resultMap="StudentMap">
+        select * from t_student where 1=1
+        <if test="studentId!=null">
+            and student_id like #{studentId}
+        </if>
+        <if test="studentName!=null">
+            and student_name like #{studentName}
+        </if>
+        order by student_id
+        limit #{offset},#{pageSize}
+    </select>
+
+    <select id="ifExist" parameterType="String" resultType="Integer">
+        select count(student_id) from t_student where
+            student_id = #{studentId}
+    </select>
+    <select id="ifClazzExist" parameterType="String" resultType="Integer">
+        select count(student_id) from t_student where
+            student_clazz_id = #{studentClazzId}
+    </select>
+    <select id="findName" parameterType="String" resultType="String">
+        select student_name from t_student where student_id = #{studentId}
+    </select>
+    <select id="findStudent" parameterType="String" resultMap="StudentMap">
+        select * from t_student where student_id = #{studentId};
+    </select>
+</mapper>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ssm.student.mapper.StudentMapper">
+    <resultMap id="StudentMap" type="Student">
+        <id property="studentId" column="id"/>
+        <result property="studentPersonId" column="person_id"/>
+        <result property="studentPersonIdType" column="person_id_type"/>
+        <result property="studentName" column="name"/>
+        <result property="studentSex" column="sex"/>
+        <result property="studentBirthday" column="birthday"/>
+        <result property="studentCountry" column="country"/>
+        <result property="studentPhoneNumber" column="phone_number"/>
+        <result property="studentAddress" column="address"/>
+        <result property="studentPC" column="PC"/>
+        <result property="studentStartYear" column="start_year"/>
+        <result property="studentEmail" column="email"/>
+        <result property="studentClazzId" column="clazz_id"/>
+    </resultMap>
+    <update id="add" parameterType="Student">
+        insert into t_student (id,person_id,person_id_type,name,sex,birthday,country,phone_number,address,PC,start_year,email,clazz_id)
+                values (#{studentId},#{studentPersonId},#{studentPersonIdType},#{studentName},
+                        #{studentSex},#{studentBirthday},#{studentCountry},#{studentPhoneNumber},
+                        #{studentAddress},#{studentPC},#{studentStartYear},#{studentEmail},#{studentClazzId})
+    </update>
+    <update id="edit" parameterType="Student">
+        update t_student set person_id=#{studentPersonId},
+                             person_id_type=#{studentPersonIdtype},
+                             name=#{studentName},
+                             sex=#{studentSex},
+                             birthday=#{studentBirthday},
+                             country=#{studentCountry},
+                             phone_number=#{studentPhoneNumber},
+                             address=#{studentAddress},
+                             PC=#{studentPC},
+                             start_year=#{studentStartYear},
+                             email=#{studentEmail},
+                             clazz_id=#{studentClazzId}
+        where id=#{studentId}
+    </update>
+    <update id="delete" parameterType="String">
+        delete from t_student where id in (${value})
+    </update>
+    <select id="getTotal" parameterType="Map" resultType="Integer">
+        select count(id) from t_student where 1=1
+        <if test="StudentId!=null">
+            and id like #{studentId}
+        </if>
+        <if test="StudentName!=null">
+            and name like #{studentName}
+        </if>
+
+    </select>
+    <select id="findAll" resultMap="StudentMap">
+        select * from t_student where 1=1
+    </select>
+    <select id="findList" parameterType="Map" resultMap="StudentMap">
+        select * from t_student where 1=1
+        <if test="StudentId!=null">
+            and id like #{studentId}
+        </if>
+        <if test="StudentName!=null">
+            and name like #{studentName}
+        </if>
+        limit #{offset},#{pageSize}
+    </select>
+
+    <select id="ifExist" parameterType="String" resultType="Integer">
+        select count(id) from t_student where
+        id = #{studentId}
+    </select>
+    <select id="ifClazzExist" parameterType="String" resultType="Integer">
+        select count(id) from t_student where
+        clazz_id = #{studentClazzId}
+    </select>
+</mapper>

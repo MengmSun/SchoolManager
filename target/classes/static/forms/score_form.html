@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>高校信息管理系统</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <script src="../../layui/layui.js"></script>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+
+<body>
+    <form class="layui-form" id="form_demo" lay-filter="val_test">
+        <!-- 提示：如果你不想用form，你可以换成div等任何一个普通元素 -->
+        <div class="layui-form-item">
+            <label class="layui-form-label">学生ID</label>
+            <div class="layui-input-block">
+                <input id="idInput" type="text" name="studentId" placeholder="请输入" autocomplete="off"
+                    class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">课程ID</label>
+            <div class="layui-input-block">
+                <input type="text" name="courseId" placeholder="请输入" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">成绩</label>
+            <div class="layui-input-block">
+                <input type="text" name="score" placeholder="0-100" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="submit_button">提交</button>
+                <button type="reset" class="layui-btn">重置</button>
+                <!--button id="clear" type="button" class="layui-btn layui-btn-primary">重置</button-->
+            </div>
+        </div>
+    </form>
+</body>
+
+<script>
+    layui.use(['element', 'form'], function () {
+        var element = layui.element;
+        var form = layui.form;
+
+        form.on('submit(submit_button)', function (data) {
+            data.field.score = parseFloat(data.field.score);
+            if (data.field.score < 0 || data.field.score > 100) {
+                layer.msg("输入score不合法");
+            } else {
+                $.ajax({
+                    type: "post",
+                    url: "/score/add",
+                    data: data.field,
+                    success: function (
+                        result) {
+                        if (result.type == "success") {
+                            layer.msg(result.msg);
+                            return;
+                        } else {
+                            layer.msg(result.msg);
+                            return;
+                        }
+                    }
+                });
+            }
+
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+    });
+</script>
+
+</html>

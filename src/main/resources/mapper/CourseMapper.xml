@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ssm.course.mapper.CourseMapper">
+    <resultMap id="CourseMap" type="Course">
+        <id property="courseId" column="course_id"/>
+        <result property="courseName" column="course_name"/>
+        <result property="courseAssessType" column="course_assess_type"/>
+        <result property="professionId" column="course_profession_id"/>
+    </resultMap>
+    <update id="add" parameterType="Course">
+        insert into t_course (course_id,course_name,course_assess_type,course_profession_id)
+        values (#{courseId},#{courseName},#{courseAssessType},
+                #{professionId})
+    </update>
+    <update id="edit" parameterType="Course">
+        update t_course set course_name=#{courseName},course_assess_type=#{courseAssessType},
+                            course_profession_id=#{professionId}
+        where course_id = #{courseId}
+    </update>
+    <update id="delete" parameterType="String">
+        delete from t_course where course_id in (${_value});
+    </update>
+    <select id="getTotal" parameterType="Map" resultType="Integer">
+        select  count(course_id) from t_course where 1=1
+        <if test="courseName!=null">
+            and course_name like #{courseName}
+        </if>
+        <if test="courseId!=null">
+            and course_id like #{courseId}
+        </if>
+    </select>
+    <select id="findAll" resultMap="CourseMap">
+        select * from t_course
+    </select>
+    <select id="findList"  parameterType="Map" resultMap="CourseMap">
+        select  * from t_course where 1=1
+        <if test="courseName!=null">
+            and course_name like #{courseName}
+        </if>
+        <if test="courseId!=null">
+            and course_id like #{courseId}
+        </if>
+        order by course_id
+        limit #{offset},#{pageSize}
+    </select>
+    <select id="ifExist" parameterType="String" resultType="Integer">
+        select count(course_id) from t_course where course_id = #{courseId}
+    </select>
+    <select id="findName" parameterType="String" resultType="String">
+        select course_name from t_course where course_id=#{courseId}
+    </select>
+</mapper>

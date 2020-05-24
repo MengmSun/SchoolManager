@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ssm.profession.mapper.ProfessionMapper">
+    <resultMap id="ProfessionMap" type="Profession">
+        <id property="professionId" column="id"/>
+        <result property="professionName" column="name"/>
+        <result property="professionAddress" column="address"/>
+        <result property="campusId" column="campus_id"/>
+        <result property="teacherId" column="teacher_id"/>
+    </resultMap>
+    <update id="add" parameterType="Profession">
+        insert into t_profession (id,name,address,campus_id,teacher_id)
+        values(#{professionId},#{professionName},#{professionAddress},#{campusId},#{teacherId})
+    </update>
+    <update id="edit" parameterType="Profession">
+        update t_profession set name=#{professionName},address=#{professionAddress},
+                                campus_id=#{campusId},teacher_id=#{teacherId}
+        where id=#{professionId}
+    </update>
+    <update id="delete" parameterType="String">
+        delete from t_profession where id in (${value});
+    </update>
+    <select id="getTotal" parameterType="Map" resultType="Integer">
+        select count(id) from t_profession where 1=1
+        <if test="professionName!=null">
+            and name like #{professionName}
+        </if>
+        <if test="professionId!=null">
+            and id like #{professionId}
+        </if>
+    </select>
+    <select id="findAll" resultMap="ProfessionMap">
+        select *
+        from t_profession
+    </select>
+    <select id="findList" parameterType="Map" resultMap="ProfessionMap">
+        select * from t_profession where 1=1
+        <if test="professionName!=null">
+            and name like #{professionName}
+        </if>
+        <if test="professionId!=null">
+            and id like #{professionId}
+        </if>
+        limit #{offset},#{pageSize}
+    </select>
+    <select id="ifExist" parameterType="String" resultType="Integer">
+        select count(id) from t_profession where id= #{professionId}
+    </select>
+    <select id="ifCampusExist" parameterType="String" resultType="Integer">
+        select count(id) from t_profession where campusId=#{campusId}
+    </select>
+    <select id="ifTeacherExist" parameterType="String" resultType="Integer">
+        select count(id) from t_profession where teacherId=#{teacherId}
+    </select>
+</mapper>

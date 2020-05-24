@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Code:</strong>
+  <%= @clazz.code %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @clazz.name %>
+</p>
+
+<p>
+  <strong>Supervisor:</strong>
+  <%= @clazz.teacher_id %>
+</p>
+
+<p>
+  <strong>Grade:</strong>
+  <%= @clazz.grade %>
+</p>
+
+<p>
+  <strong>Department:</strong>
+  <%= @clazz.department_id %>
+</p>
+
+<p>
+  <%= link_to 'Students', clazz_students_path(@clazz) %>
+</p>
+
+<%= link_to 'Edit', edit_clazz_path(@clazz) %> |
+<%= link_to 'Back', clazzes_path %>

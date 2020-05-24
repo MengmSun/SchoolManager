@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Code:</strong>
+  <%= @status_change.code %>
+</p>
+
+<p>
+  <strong>Type:</strong>
+  <%= @status_change.type %>
+</p>
+
+<p>
+  <strong>Happened at:</strong>
+  <%= @status_change.happened_at %>
+</p>
+
+<p>
+  <strong>New clazz code:</strong>
+  <%= @status_change.new_clazz_code %>
+</p>
+
+<p>
+  <strong>Original clazz code:</strong>
+  <%= @status_change.original_clazz_code %>
+</p>
+
+<%= link_to 'Edit', edit_status_change_path(@status_change) %> |
+<%= link_to 'Back', status_changes_path %>

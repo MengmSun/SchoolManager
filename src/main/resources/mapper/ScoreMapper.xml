@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ssm.score.mapper.ScoreMapper">
+    <!-- 学生的课程记录-->
+    <resultMap id="StudentMap" type="Student">
+        <id property="studentId" column="student_id"/>
+        <result property="studentPersonId" column="student_person_id"/>
+        <result property="studentPersonIdType" column="student_person_id_type"/>
+        <result property="studentName" column="student_name"/>
+        <result property="studentSex" column="student_sex"/>
+        <result property="studentBirthday" column="student_birthday"/>
+        <result property="studentCountry" column="student_country"/>
+        <result property="studentPhoneNumber" column="student_phone_number"/>
+        <result property="studentAddress" column="student_address"/>
+        <result property="studentPC" column="student_PC"/>
+        <result property="studentStartYear" column="student_start_year"/>
+        <result property="studentEmail" column="student_email"/>
+        <result property="studentClazzId" column="student_clazz_id"/>
+        <collection property="courseList" ofType="Course">
+            <id property="courseId" column="course_id"/>
+            <result property="courseName" column="course_name"/>
+            <result property="courseAssessType" column="course_assess_type"/>
+            <result property="professionId" column="course_profession_id"/>
+            <result property="score" column="score"/>
+        </collection>
+    </resultMap>
+    <!--课程的学生记录-->
+    <resultMap id="CourseMap" type="Course">
+        <id property="courseId" column="course_id"/>
+        <result property="courseName" column="course_name"/>
+        <result property="courseAssessType" column="course_assess_type"/>
+        <result property="professionId" column="course_profession_id"/>
+        <collection property="studentList" ofType="Student">
+            <id property="studentId" column="student_id"/>
+            <result property="studentPersonId" column="student_person_id"/>
+            <result property="studentPersonIdType" column="student_person_id_type"/>
+            <result property="studentName" column="student_name"/>
+            <result property="studentSex" column="student_sex"/>
+            <result property="studentBirthday" column="student_birthday"/>
+            <result property="studentCountry" column="student_country"/>
+            <result property="studentPhoneNumber" column="student_phone_number"/>
+            <result property="studentAddress" column="student_address"/>
+            <result property="studentPC" column="student_PC"/>
+            <result property="studentStartYear" column="student_start_year"/>
+            <result property="studentEmail" column="student_email"/>
+            <result property="studentClazzId" column="student_clazz_id"/>
+            <result property="score" column="score"/>
+        </collection>
+    </resultMap>
+    <resultMap id="ScoreMap" type="Score">
+        <id property="courseId" column="course_id"/>
+        <id property="studentId" column="student_id"/>
+        <result property="score" column="score"/>
+    </resultMap>
+
+    <select id="findScore" parameterType="Map" resultMap="ScoreMap">
+        select t_score.* from t_score where 1=1
+        <if test="studentId!=null">
+            and t_score.student_id like #{studentId}
+        </if>
+        <if test="courseId!=null">
+            and t_score.course_id like #{courseId}
+        </if>
+        order by course_id ,student_id
+            limit #{offset},#{pageSize};
+    </select>
+    <select id="getScoreTotal" parameterType="Map" resultType="Integer">
+        select count(*) from t_score where 1=1
+        <if test="studentId!=null">
+            and t_score.student_id like #{studentId}
+        </if>
+        <if test="courseId!=null">
+            and t_score.course_id like #{courseId};
+        </if>
+    </select>
+
+    <select id="findCourse" parameterType="Map" resultMap="StudentMap">
+        select *
+        from t_student,t_course,t_score
+        where t_student.student_id= #{studentId}
+        and t_student.student_id = t_score.student_id
+        and t_course.course_id = t_score.course_id
+        order by t_course.course_id
+         limit #{offset},#{pageSize};
+    </select>
+    <select id="getCourseTotal" parameterType="Map" resultType="Integer">
+        select count(*) from (t_score
+            join t_student
+            on t_student.student_id = t_score.student_id)
+            join t_course
+            on t_course.course_id= t_score.course_id
+        where t_student.student_id= #{studentId};
+    </select>
+
+    <select id="findStudent" parameterType="Map" resultMap="CourseMap">
+        select *
+               from (
+                    t_score
+                    join t_course  on t_score.course_id = t_course.course_id
+                        )
+               join t_student on t_score.student_id = t_student.student_id
+        where t_course.course_id=#{courseId}
+
+               limit #{offset},#{pageSize};
+    </select>
+    <select id="getStudentTotal" parameterType="Map" resultType="Integer">
+        select count(*)
+        from (
+                 t_score
+                     join t_course  on t_score.course_id = t_course.course_id
+                 )
+                 join t_student on t_score.student_id = t_student.student_id
+        where t_course.course_id=#{courseId};
+    </select>
+
+    <update id="add" parameterType="Score">
+        insert into t_score (course_id, student_id, score)
+        VALUES (#{courseId},#{studentId},#{score});
+    </update>
+    <update id="edit" parameterType="Score">
+        update t_score set score = #{score}
+        where course_id=#{courseId} and student_id = #{studentId};
+
+    </update>
+    <update id="delete" parameterType="Score">
+        delete from t_score where student_id=#{studentId}
+                            and course_id=#{courseId};
+    </update>
+
+</mapper>

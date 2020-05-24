@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+
+    </settings>
+    <typeAliases>
+        <typeAlias type="ssm.campus.entity.Campus" alias="Campus"/>
+        <typeAlias type="ssm.profession.entity.Profession" alias="Profession"/>
+        <typeAlias type="ssm.clazz.entity.Clazz" alias="Clazz"/>
+        <typeAlias type="ssm.course.entity.Course" alias="Course"/>
+        <typeAlias type="ssm.student.entity.Student" alias="Student"/>
+        <typeAlias type="ssm.teacher.entity.Teacher" alias="Teacher"/>
+        <typeAlias type="ssm.downgrade.entity.DownGrade" alias="DownGrade"/>
+        <typeAlias type="ssm.switchmajor.entity.SwitchMajor" alias="SwitchMajor"/>
+        <typeAlias type="ssm.score.entity.Score" alias="Score"/>
+        <typeAlias type="ssm.coursestart.entity.CourseStart" alias="CourseStart"/>
+    </typeAliases>
+</configuration>

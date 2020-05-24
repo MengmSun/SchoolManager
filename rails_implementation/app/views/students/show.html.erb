@@ -1,0 +1,76 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Student:</strong>
+  <%= @student.student_id %>
+</p>
+
+<p>
+  <strong>Clazz:</strong>
+  <%= @student.clazz_id %>
+</p>
+
+<p>
+  <strong>Id number:</strong>
+  <%= @student.id_number %>
+</p>
+
+<p>
+  <strong>Id type:</strong>
+  <%= @student.id_type %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @student.name %>
+</p>
+
+<p>
+  <strong>Gender:</strong>
+  <%= @student.gender %>
+</p>
+
+<p>
+  <strong>Birthday:</strong>
+  <%= @student.birthday %>
+</p>
+
+<p>
+  <strong>Nationality:</strong>
+  <%= @student.nationality %>
+</p>
+
+<p>
+  <strong>Home address:</strong>
+  <%= @student.home_address %>
+</p>
+
+<p>
+  <strong>Home postcode:</strong>
+  <%= @student.home_postcode %>
+</p>
+
+<p>
+  <strong>Phone number:</strong>
+  <%= @student.phone_number %>
+</p>
+
+<p>
+  <strong>Email:</strong>
+  <%= @student.email %>
+</p>
+
+<p>
+  <%= link_to "Courses Selections", student_course_selections_path(@student) %>
+</p>
+
+<p>
+  <%= link_to "Department Changes", student_department_changes_path(@student) %>
+</p>
+
+<p>
+  <%= link_to "Grade Changes", student_grade_changes_path(@student) %>
+</p>
+
+<%= link_to 'Edit', edit_student_path(@student) %> |
+<%= link_to 'Back', students_path %>

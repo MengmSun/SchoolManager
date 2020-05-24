@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ssm.coursestart.mapper.CourseStartMapper">
+    <resultMap id="CourseStartMap" type="CourseStart">
+        <id property="courseStartCourseId" column="course_start_course_id"/>
+        <result property="courseStartDate" column="course_start_date"/>
+        <result property="courseStartSeason" column="course_start_season"/>
+        <result property="courseStartTime" column="course_start_time"/>
+        <result property="courseStartTeacherId" column="course_start_teacher_id"/>
+        <association property="teacher" javaType="Teacher">
+            <id property="teacherId" column="teacher_id"/>
+            <result property="teacherPersonId" column="teacher_person_id"/>
+            <result property="teacherPersonIdType" column="teacher_person_id_type"/>
+            <result property="teacherName" column="teacher_name"/>
+            <result property="teacherSex" column="teacher_sex"/>
+            <result property="teacherTitle" column="teacher_title"/>
+            <result property="teacherBirthday" column="teacher_birthday"/>
+            <result property="teacherCountry" column="teacher_country"/>
+            <result property="teacherPhoneNumber" column="teacher_phone_number"/>
+            <result property="teacherAddress" column="teacher_address"/>
+            <result property="teacherPC" column="teacher_PC"/>
+            <result property="teacherStartYear" column="teacher_start_year"/>
+            <result property="teacherEmail" column="teacher_email"/>
+            <result property="professionId" column="teacher_profession_id"/>
+        </association>
+    </resultMap>
+    <resultMap id="TeacherMap" type="Teacher">
+        <id property="teacherId" column="teacher_id"/>
+        <result property="teacherPersonId" column="teacher_person_id"/>
+        <result property="teacherPersonIdType" column="teacher_person_id_type"/>
+        <result property="teacherName" column="teacher_name"/>
+        <result property="teacherSex" column="teacher_sex"/>
+        <result property="teacherTitle" column="teacher_title"/>
+        <result property="teacherBirthday" column="teacher_birthday"/>
+        <result property="teacherCountry" column="teacher_country"/>
+        <result property="teacherPhoneNumber" column="teacher_phone_number"/>
+        <result property="teacherAddress" column="teacher_address"/>
+        <result property="teacherPC" column="teacher_PC"/>
+        <result property="teacherStartYear" column="teacher_start_year"/>
+        <result property="teacherEmail" column="teacher_email"/>
+        <result property="professionId" column="teacher_profession_id"/>
+        <collection property="courseStartList" ofType="CourseStart">
+            <id property="courseStartCourseId" column="course_start_course_id"/>
+            <result property="courseStartDate" column="course_start_date"/>
+            <result property="courseStartSeason" column="course_start_season"/>
+            <result property="courseStartTime" column="course_start_time"/>
+            <result property="courseStartTeacherId" column="course_start_teacher_id"/>
+        </collection>
+    </resultMap>
+    <update id="add" parameterType="CourseStart">
+        insert into t_course_start (course_start_date, course_start_season, course_start_time, course_start_course_id, course_start_teacher_id)
+        VALUES (#{courseStartDate},#{courseStartSeason},#{courseStartTime},#{courseStartCourseId},#{courseStartTeacherId});
+    </update>
+    <update id="edit" parameterType="CourseStart">
+        update t_course_start set course_start_date = #{courseStartDate},
+                                  course_start_season = #{courseStartSeason},
+                                  course_start_time = #{courseStartTime},
+                                  course_start_teacher_id = #{courseStartTeacherId}
+                        where  course_start_course_id = #{courseStartCourseId};
+    </update>
+    <update id="delete" parameterType="String">
+        delete from t_course_start where course_start_course_id in (${_value});
+    </update>
+    <select id="findList" parameterType="Map" resultMap="CourseStartMap">
+        select tcs.*,tt.*
+        from t_course_start tcs,t_teacher tt
+        where 1=1
+        <if test="courseId!=null">
+            and tcs.course_start_course_id like #{courseId}
+        </if>
+        <if test="teacherId!=null">
+            and tcs.course_start_teacher_id like #{teacherId}
+        </if>
+        <if test="startDay!=null and endDay!=null">
+            and tcs.course_start_date between #{startDay} and #{endDay}
+        </if>
+        and tcs.course_start_teacher_id = tt.teacher_id
+        order by tcs.course_start_course_id
+        limit #{offset},#{pageSize};
+    </select>
+    <select id="getTotal" parameterType="Map" resultType="Integer">
+        select count(tcs.course_start_course_id)
+        from t_course_start tcs,t_teacher tt
+        where 1=1
+        <if test="courseId!=null">
+            and tcs.course_start_course_id like #{courseId}
+        </if>
+        <if test="teacherId!=null">
+            and tcs.course_start_teacher_id like #{teacherId}
+        </if>
+        <if test="startDay!=null and endDay!=null">
+            and tcs.course_start_date between #{startDay} and #{endDay}
+        </if>
+        and tcs.course_start_teacher_id = tt.teacher_id;
+    </select>
+    <select id="findCourseList" parameterType="Map" resultMap="TeacherMap">
+        select *
+        from t_teacher tt join t_course_start tcs on tt.teacher_id = tcs.course_start_teacher_id
+        where tcs.course_start_teacher_id = #{teacherId}
+        order by tcs.course_start_teacher_id
+        limit #{offset},#{pageSize};
+    </select>
+    <select id="getCourseTotal" parameterType="Map" resultType="Integer">
+        select count(*)
+        from t_teacher tt join t_course_start tcs on tt.teacher_id = tcs.course_start_teacher_id
+        where tcs.course_start_teacher_id = #{teacherId};
+    </select>
+
+</mapper>

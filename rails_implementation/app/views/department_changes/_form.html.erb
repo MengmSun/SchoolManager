@@ -1,0 +1,47 @@
+<%= form_with(model: department_change, local: true) do |form| %>
+<% if department_change.errors.any? %>
+<div id="error_explanation">
+  <h2><%= pluralize(department_change.errors.count, "error") %> prohibited this department_change from being saved:</h2>
+
+  <ul>
+    <% department_change.errors.full_messages.each do |message| %>
+    <li><%= message %></li>
+    <% end %>
+  </ul>
+</div>
+<% end %>
+
+<div class="field">
+  <%= form.label :code %>
+  <%= form.text_field :code %>
+</div>
+
+<div class="field">
+  <%= form.label :type %>
+  <%= form.text_field :type %>
+</div>
+
+<div class="field">
+  <%= form.label :happened_at %>
+  <%= form.date_select :happened_at %>
+</div>
+
+<div class="field">
+  <%= form.label :new_clazz_code %>
+  <%= form.text_field :new_clazz_code %>
+</div>
+
+<div class="field">
+  <%= form.label :original_clazz_code %>
+  <%= form.text_field :original_clazz_code %>
+</div>
+
+<div class="field">
+  <%= form.label :youth_league_status %>
+  <%= form.text_field :youth_league_status %>
+</div>
+
+<div class="actions">
+  <%= form.submit %>
+</div>
+<% end %>
