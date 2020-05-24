@@ -4,7 +4,7 @@
 
 框架：
 
-后端：SpringMVC+SpringBoot+MyRedis
+后端：SpringMVC+SpringBoot+MyBatis
 
 前端：JQuery+LayUI
 
