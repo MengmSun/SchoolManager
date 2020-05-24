@@ -3,7 +3,7 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&characterEncoding=utf-8&serverTimezone=Hongkong&allowMultiQueries=true
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    password: Smm6363693
+    password: 
   mvc:
     view:
       suffix: .html
